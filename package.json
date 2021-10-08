@@ -117,10 +117,11 @@
     ]
   },
   "prettier": {
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": false,
-    "trailingComma": "all"
+    "semi": true,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "tabWidth": 4,
+    "singleQuote": true
   },
   "detox": {
     "test-runner": "jest",

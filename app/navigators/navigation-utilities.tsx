@@ -22,7 +22,7 @@ export const RootNavigation = {
 export const navigationRef = createNavigationContainerRef();
 
 /**
- * Gets the current screen from any navigation state.
+ * Gets the current Screen from any navigation state.
  */
 export function getActiveRouteName(state: NavigationState | PartialState<NavigationState>) {
     const route = state.routes[state.index];
@@ -35,7 +35,7 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
 }
 
 /**
- * Hook that handles Android back button presses and forwards those on to
+ * Hook that handles Android back Button presses and forwards those on to
  * the navigation or allows exiting the app.
  */
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
@@ -46,7 +46,7 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     }, [canExit]);
 
     useEffect(() => {
-        // We'll fire this when the back button is pressed on Android.
+        // We'll fire this when the back Button is pressed on Android.
         const onBackPress = () => {
             if (!navigationRef.isReady()) {
                 return false;
@@ -88,7 +88,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
     // It is selectively enabled in development mode with
     // the following approach. If you'd like to use navigation persistence
     // in production, remove the __DEV__ and set the state to true
-    const [isRestored, setIsRestored] = useState(!__DEV__);
+    const [isRestored, setIsRestored] = useState(false);
 
     const routeNameRef = useRef<string | undefined>();
 
@@ -98,7 +98,6 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
 
         if (previousRouteName !== currentRouteName) {
             // track screens.
-            __DEV__ && console.tron.log(currentRouteName);
         }
 
         // Save the current route name for later comparision

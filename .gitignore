@@ -81,3 +81,9 @@ web-build/
 # Configurations
 app/config/env.*.js
 !env.js
+
+# Generated .js
+app/**/*.js
+app/**/*.js.map
+test/**/*.js
+test/**/*.js.map

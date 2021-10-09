@@ -10,6 +10,7 @@ import { palette } from './palette';
  * put that in the <Spinner /> component.
  */
 export const color = {
+    black: palette.black,
     /**
      * The palette is available to use, but prefer using the name.
      */
@@ -21,7 +22,7 @@ export const color = {
      */
     transparent: 'rgba(0, 0, 0, 0)',
     /**
-     * The screen background.
+     * The Screen background.
      */
     background: palette.white,
     /**
@@ -37,7 +38,7 @@ export const color = {
      */
     line: palette.offWhite,
     /**
-     * The default color of text in many components.
+     * The default color of Text in many components.
      */
     text: palette.white,
     /**
@@ -51,13 +52,13 @@ export const color = {
 
     /**
      * Storybook background for Text stories, or any stories where
-     * the text color is color.text, which is white by default, and does not show
+     * the Text color is color.Text, which is white by default, and does not show
      * in Stories against the default white background
      */
     storybookDarkBg: palette.black,
 
     /**
-     * Storybook text color for stories that display Text components against the
+     * Storybook Text color for stories that display Text components against the
      * white background
      */
     storybookTextColor: palette.black,

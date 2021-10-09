@@ -1,7 +1,10 @@
 import { ApisauceInstance, create, ApiResponse } from 'apisauce';
 import { getGeneralApiProblem } from './api-problem';
 import { ApiConfig, DEFAULT_API_CONFIG } from './api-config';
-import * as Types from './api.types';
+import { GetProjectResult } from '../../types/project';
+import { GetUserResult } from '../../types/user';
+import { User } from '../../models/user/user';
+import { Project } from '../../models/project/project';
 
 /**
  * Manages all requests to the API.
@@ -45,11 +48,13 @@ export class Api {
     }
 
     /**
-     * Gets a list of users.
+     * Login user
      */
-    async getUsers(): Promise<Types.GetUsersResult> {
-        // make the api call
-        const response: ApiResponse<any> = await this.apisauce.get(`/users`);
+    async loginUser(userName: string, password: string): Promise<GetUserResult> {
+        const response: ApiResponse<any> = await this.apisauce.post(`api2/v1/auth/login`, {
+            userName,
+            password,
+        });
 
         // the typical ways to die when calling an api
         if (!response.ok) {
@@ -57,30 +62,32 @@ export class Api {
             if (problem) return problem;
         }
 
-        const convertUser = (raw) => {
-            return {
-                id: raw.id,
-                name: raw.name,
-            };
-        };
-
-        // transform the data into the format we are expecting
         try {
-            const rawUsers = response.data;
-            const resultUsers: Types.User[] = rawUsers.map(convertUser);
-            return { kind: 'ok', users: resultUsers };
+            const rawUser = response.data;
+            const resultUser: User = {
+                id: rawUser.user.id,
+                token: rawUser.token,
+                name: rawUser.user.userName,
+            };
+            return { kind: 'ok', user: resultUser };
         } catch {
             return { kind: 'bad-data' };
         }
     }
 
     /**
-     * Gets a single user by ID
+     * Gets a list of projects
      */
-
-    async getUser(id: string): Promise<Types.GetUserResult> {
-        // make the api call
-        const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`);
+    async getProjects(token: string, dueInHours?: number): Promise<GetProjectResult> {
+        const response: ApiResponse<any> = await this.apisauce.get(
+            `api2/v1/projects`,
+            dueInHours ? { dueInHours } : undefined,
+            {
+                headers: {
+                    Authorization: `ApiToken ${token}`,
+                },
+            },
+        );
 
         // the typical ways to die when calling an api
         if (!response.ok) {
@@ -88,13 +95,21 @@ export class Api {
             if (problem) return problem;
         }
 
+        const convertProject = (raw): Project => {
+            return {
+                id: raw.id,
+                name: raw.name,
+                sourceLang: raw.sourceLang,
+                status: raw.status,
+                targetLangs: raw.targetLangs,
+            };
+        };
+
         // transform the data into the format we are expecting
         try {
-            const resultUser: Types.User = {
-                id: response.data.id,
-                name: response.data.name,
-            };
-            return { kind: 'ok', user: resultUser };
+            const rawProjects = response.data.content;
+            const resultProjects = rawProjects.map(convertProject);
+            return { kind: 'ok', projects: resultProjects };
         } catch {
             return { kind: 'bad-data' };
         }

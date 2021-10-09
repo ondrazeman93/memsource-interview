@@ -27,8 +27,8 @@ const ProjectsScreen = observer(({ navigation }: StackScreenProps<NavigatorParam
     const filterData = useCallback(
         async (date: number) => {
             hideModal();
-            await projectStore.getProjects(userStore.getUserToken, date);
             setSelectedDueDate(date);
+            await projectStore.getProjects(userStore.getUserToken, date);
         },
         [userStore, projectStore],
     );

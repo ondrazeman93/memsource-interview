@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, ViewStyle, TextInput, StyleSheet, Text } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, ViewStyle, TextInput, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
@@ -24,6 +24,7 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
             password: 'N87pO0u%9Aq2M7hU$wvP',
         },
     });
+    const [loading, setLoading] = useState(false);
     const { userStore } = useStores();
     const { user } = userStore;
 
@@ -37,14 +38,19 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
     }, [userStore]);
 
     const onSubmit: SubmitHandler<FormValues> = useCallback(async (data) => {
+        setLoading(true);
         await userStore.loginUser(data.username, data.password);
+        setLoading(false);
+    }, []);
+
+    useEffect(() => {
         if (user && user.token) {
             navigation.reset({
                 index: 1,
                 routes: [{ name: 'projects' }],
             });
         }
-    }, []);
+    }, [user]);
 
     return (
         <View testID="LoginScreen" style={styles.full}>
@@ -90,7 +96,11 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
                         defaultValue=""
                     />
                     {errors.password && <Text>This is required.</Text>}
-                    <Button testID="loginButton" text="Login" onPress={handleSubmit(onSubmit)} />
+                    {loading ? (
+                        <ActivityIndicator size="large" />
+                    ) : (
+                        <Button testID="loginButton" text="Login" onPress={handleSubmit(onSubmit)} />
+                    )}
                 </View>
             </Screen>
         </View>

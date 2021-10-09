@@ -16,7 +16,7 @@ const ProjectItem = ({ name, sourceLang, targetLangs, status }: Project) => {
             </View>
             <View style={styles.row}>
                 <Text>Target languages: </Text>
-                <View style={styles.row}>
+                <View style={[styles.row, styles.flex]}>
                     {targetLangs.map((lang, index) => (
                         <Text key={index} style={styles.text}>
                             {lang}
@@ -39,8 +39,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: spacing[5],
     },
+    flex: {
+        flex: 1,
+    },
     row: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     text: {
         fontWeight: 'bold',

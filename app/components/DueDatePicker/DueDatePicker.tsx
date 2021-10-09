@@ -23,7 +23,7 @@ const DueDatePicker = ({ visible, hideModal, dates, activeDueDate, filterData }:
     }, [visible]);
 
     return (
-        <Modal visible={visible} onRequestClose={hideModal} animated animationType="slide">
+        <Modal visible={visible} onRequestClose={hideModal} animated>
             <View style={styles.modal}>
                 <TouchableOpacity onPress={() => filterData(selectedDueDate)}>
                     <Text style={styles.modalClose}>Filter</Text>

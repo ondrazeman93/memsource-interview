@@ -20,6 +20,7 @@ export const UserStoreModel = types
                 self.saveUser(result.user);
             } else {
                 console.log(result.kind);
+                throw new Error(result.kind);
             }
         },
     }))

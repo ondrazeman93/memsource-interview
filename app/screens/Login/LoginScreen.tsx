@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, ViewStyle, TextInput, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, ViewStyle, TextInput, StyleSheet, Text, ActivityIndicator, TextStyle } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
@@ -25,6 +25,7 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
         },
     });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const { userStore } = useStores();
     const { user } = userStore;
 
@@ -39,7 +40,12 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
 
     const onSubmit: SubmitHandler<FormValues> = useCallback(async (data) => {
         setLoading(true);
-        await userStore.loginUser(data.username, data.password);
+        try {
+            await userStore.loginUser(data.username, data.password);
+        } catch (e) {
+            console.log(e);
+            setError(e.message);
+        }
         setLoading(false);
     }, []);
 
@@ -70,6 +76,7 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
                                 onChangeText={onChange}
                                 onBlur={onBlur}
                                 value={value}
+                                testID="usernameInput"
                             />
                         )}
                         name="username"
@@ -90,6 +97,7 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
                                 onChangeText={onChange}
                                 onBlur={onBlur}
                                 value={value}
+                                testID="passwordInput"
                             />
                         )}
                         name="password"
@@ -101,6 +109,11 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
                     ) : (
                         <Button testID="loginButton" text="Login" onPress={handleSubmit(onSubmit)} />
                     )}
+                    {!!error && (
+                        <Text style={styles.error} testID="responseError">
+                            Error: {error}
+                        </Text>
+                    )}
                 </View>
             </Screen>
         </View>
@@ -109,6 +122,7 @@ const LoginScreen = observer(({ navigation }: StackScreenProps<NavigatorParamLis
 
 const styles = StyleSheet.create<{
     content: ViewStyle;
+    error: TextStyle;
     full: ViewStyle;
     input: ViewStyle;
 }>({
@@ -116,6 +130,12 @@ const styles = StyleSheet.create<{
         flexGrow: 1,
         justifyContent: 'center',
         padding: spacing[4],
+    },
+    error: {
+        color: color.error,
+        fontSize: 14,
+        marginTop: spacing[4],
+        textAlign: 'center',
     },
     full: {
         flex: 1,

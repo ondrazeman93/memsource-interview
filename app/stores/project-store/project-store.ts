@@ -1,6 +1,6 @@
 import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 import { Project, ProjectModel } from '../../models/project/project';
-import { withEnvironment } from '../../models/extensions/with-environment';
+import { withEnvironment } from '../../models';
 
 export const ProjectStoreModel = types
     .model('ProjectModel')
